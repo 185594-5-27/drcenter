@@ -1,0 +1,186 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+    <title>联车宝推广注册页</title>
+    <script th:src="@{/register/js/jquery-1.11.2.min.js}"></script>
+</head>
+<style>
+    *{padding:0; margin:0; list-style: none;text-decoration: none; font-family: '苹方 中等',' 苹方 常规';}
+    input{font-family:font-family:' 苹方 常规';}
+    .box{max-width:1125px;width:100%;margin:0 auto;background:#fafafa;}
+    .box img{width:100%;}
+    .header img{display:block;}
+    .clearfix{clear:both;}
+    .tab_box{width:100%;margin-top:10px;text-align: center;}
+    .tab_box input{border:1px solid #e0e0e0;box-sizing:border-box;border-radius: 8px;height:110px;margin:10px auto;font-weight: lighter;font-family: ' 苹方 常规'; font-size:32px; color:#c0c0c0;padding-left:98px;}
+    .tab_box>input{width:calc(100% - 248px);width:-webkit-calc(100% - 248px);}
+    .btn_phone{background:url(register/image/phone_icon@3x.png) no-repeat 22px 22px white;}
+    .bnt_lie1 .btn_yzm{background:url(register/image/code_icon@3x.png) no-repeat 22px 22px white;}
+    .btn_possword{background:url(register/image/password_icon@3x.png) no-repeat 22px 22px white;}
+    .btn_yqm{background:url(register/image/invCode_icon@3x.png) no-repeat 22px 22px white;}
+    .bnt_lie1,.bnt_lie2,.bnt_lie3{margin:0 auto;width:calc(100% - 248px);width:-webkit-calc(100% - 248px);}
+    .bnt_lie2{text-align:left;height:40px;font-size:28px; color:#c0c0c0;margin-bottom:40px;}
+    .bnt_lie3{text-align:center;font-size:32px;color:#c0c0c0;padding-top:20px;}
+    .bnt_lie1 input:nth-child(2){float:left;padding:0;background:#00a0e9;color:white; width:30%;text-align: center;cursor: pointer;}
+    .bnt_lie1 input:nth-child(1){float:left;width:calc(70% - 20px); -webkit-width:calc(70% - 20px);margin-right:20px;}
+    input.checkbox{background:#00a0e9;width:20px; height:20px;}
+    .bnt_lie2>input{margin-right:20px;}
+    input.sub{padding-left:0; background:#00a0e9;color:white;font-size:36px;}
+    .cont_one img{display:block;}
+
+    /*@2*/
+    @media(max-width:768px){
+        .tab_box input{height:88px;font-size:24px;padding-left:80px;margin:10px auto;}
+        .tab_box>input{width:calc(100% - 230px);width:-webkit-calc(100% - 230px);}
+        .bnt_lie1,.bnt_lie2,.bnt_lie3{width:calc(100% - 230px);width:-webkit-calc(100% - 230px);}
+
+        .btn_phone{background:url(register/image/phone_icon@2x.png) no-repeat 22px 22px white;}
+        .bnt_lie1 .btn_yzm{background:url(register/image/code_icon@2x.png) no-repeat 22px 22px white;}
+        .btn_possword{background:url(register/image/password_icon@2x.png) no-repeat 22px 22px white;}
+        .btn_yqm{background:url(register/image/invCode_icon@2x.png) no-repeat 22px 22px white;}
+
+        input.checkbox{width:20px; height:20px;}
+        .bnt_lie2{height:40px;font-size:20px;margin-bottom:40px;}
+        .bnt_lie2>input{margin-right:20px;}
+        .bnt_lie3{font-size:24px;}
+        input.sub{padding-left:0;font-size:36px;}
+
+    }
+    /*@1*/
+    @media(max-width:420px){
+        .tab_box input{height:44px;font-size:12px;padding-left:40px;margin:5px auto;}
+        .tab_box>input{width:calc(100% - 115px);width:-webkit-calc(100% - 115px);}
+        .bnt_lie1,.bnt_lie2,.bnt_lie3{width:calc(100% - 115px);width:-webkit-calc(100% - 115px);}
+
+        .btn_phone{background:url(register/image/phone_icon.png) no-repeat 11px 11px white;}
+        .bnt_lie1 .btn_yzm{background:url(register/image/code_icon.png) no-repeat 11px 11px white;}
+        .btn_possword{background:url(register/image/password_icon.png) no-repeat 11px 11px white;}
+        .btn_yqm{background:url(register/image/invCode_icon.png) no-repeat 11px 11px white;}
+
+        input.checkbox{width:10px; height:10px;}
+        .bnt_lie2{height:20px;font-size:10px;margin-bottom:20px;}
+        .bnt_lie2>input{margin-right:10px;}
+        .bnt_lie3{font-size:12px;}
+        input.sub{padding-left:0;font-size:18px;}
+
+    }
+</style>
+<script type="text/javascript">
+
+    var start_time = 60;
+
+    var tmid;
+
+    function reduce(){
+        if(start_time>0){
+            start_time = start_time - 1;
+        }
+        $("#getPhoneMsg").attr("value",start_time);
+        if(start_time==0){
+            $("#getPhoneMsg").attr("value","获取验证码");
+            start_time = 60;
+            window.clearInterval(tmid);
+        }
+    }
+
+    $(function(){
+
+        // 获取验证码的单击事件
+        $("#getPhoneMsg").click(function(){
+            if(start_time!=60){
+                alert('请勿频繁获取验证码！');
+                return false;
+            }
+            // 手机号验证
+            var phoneNum = $("#phoneNum").val();
+            if(phoneNum.length!=11){
+                alert('请输入11位的手机号！');
+                return false;
+            }
+            if(!(/^1[3|4|5|6|7|8][0-9]\d{4,8}$/.test(phoneNum))){
+                alert('不是完整的11位手机号或者正确的手机号前七位！');
+                return false;
+            }
+            $("#getPhoneMsg").attr("value",start_time);
+            // 一秒执行一次
+            tmid = window.setInterval("reduce()",1000);
+            $.post("getPhoneMsg",{phoneNum:phoneNum},function(data){
+                alert(data.msg)
+            })
+        });
+
+
+        $("#register_btn").click(function(){
+            // 手机号验证
+            var phoneNum = $("#phoneNum").val();
+            if(phoneNum.length!=11){
+                alert('请输入11位的手机号！');
+                return false;
+            }
+            if(!(/^1[3|4|5|6|7|8][0-9]\d{4,8}$/.test(phoneNum))){
+                alert('不是完整的11位手机号或者正确的手机号前七位！');
+                return false;
+            }
+            // 验证码验证
+            var verifyCode = $("#verifyCode").val();
+            if(verifyCode.length<4){
+                alert('请输入正确的验证码！');
+                return false;
+            }
+            // 密码验证
+            var password = $("#password").val();
+            if(password.length<6){
+                alert('密码要求6-15个字符！');
+                return false;
+            }
+            // 验证邀请码
+            var inviterId = $("#inviterId").val();
+            if(isNaN(inviterId)){
+                alert('请输入正确的邀请码！');
+                return false;
+            }
+            // 协议勾选判断
+            var check_btn = $("#check_btn").is(':checked');
+            if(!check_btn){
+                alert('请先勾选好运联联注册协议！');
+                return false;
+            };
+            // 提交表单数据
+            $.post("mobileRegister",$('#register_form').serialize(),function(data){
+                alert(data.msg)
+            })
+        })
+
+    })
+</script>
+
+<body>
+<div class="box">
+    <div class="header"><img src="register/image/banner@3x.png"></div>
+    <form method="post" th:action="mobileRegister" id="register_form" >
+        <div class="tab_box">
+            <input class="btn_phone" name="phoneNum" id="phoneNum" type="text" placeholder="请输入手机号" value="">
+            <div class="bnt_lie1">
+                <input class="btn_yzm" type="text" name="verifyCode" id="verifyCode" placeholder="请输验证码" value="">
+                <input type="botton" value="获取验证码" id="getPhoneMsg">
+                <h1 class="clearfix"></h1>
+            </div>
+            <input class="btn_possword" type="text" name="password" id="password" placeholder="密码要求6-15个字符" value="">
+            <input class="btn_yqm" type="text" name="inviterId" id="inviterId" placeholder="请输入邀请码" th:value="${entity.inviterId}" >
+            <div class="bnt_lie2">
+                <input class="checkbox" name="" id="check_btn" checked="checked" type="checkbox" value="">我已阅读并同意<a  th:href="${address}" style="color:#00a0e9;">《好运联联注册协议》</a>
+            </div>
+            <input class="sub" id="register_btn" type="button"  name="Submit" value="注册">
+            <div class="bnt_lie3">已有账号，<a href="uploadLcb" style="color:#ff8a00;">下载联车宝</a></div>
+        </div>
+    </form>
+    <div class="cont_one">
+        <img src="register/image/bg_img1@3x.png">
+        <img src="register/image/bg_img2@3x.png">
+    </div>
+</div>
+
+</body>
+</html>
